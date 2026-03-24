@@ -30,8 +30,6 @@ public class Main {
 		RellenarArreglo("Usuarios.txt", UsuarioID, UsuarioContraseña, RegistroID, RegistroFecha, RegistroHoras, RegistroActividad, a);
 		RellenarArreglo("Registros.txt", UsuarioID, UsuarioContraseña, RegistroID, RegistroFecha, RegistroHoras, RegistroActividad, b);
 		
-		
-		
 		//cerrar scanner como una buena práctica :D
 		scanner.close();
 	
@@ -113,6 +111,7 @@ public class Main {
 	}
 	
 	/*----------------------------------------------------------------------------------------------------------------------*/
+	
 	
 	
 	
