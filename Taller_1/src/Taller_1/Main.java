@@ -30,15 +30,123 @@ public class Main {
 		RellenarArreglo("Usuarios.txt", UsuarioID, UsuarioContraseña, RegistroID, RegistroFecha, RegistroHoras, RegistroActividad, a);
 		RellenarArreglo("Registros.txt", UsuarioID, UsuarioContraseña, RegistroID, RegistroFecha, RegistroHoras, RegistroActividad, b);
 		
+		//Llamar al método menú principal para poder elegir entre los menús
+		MenuPrincipal(UsuarioID, UsuarioContraseña, RegistroID, RegistroFecha, RegistroHoras, RegistroActividad, scanner);
+		
+		
 		//cerrar scanner como una buena práctica :D
 		scanner.close();
 	
 	}
 	
-	//Método generado para imprimir bonito :D
-	public static void Print(String texto) {
-		System.out.println(texto);
+	
+	
+	/* ------------------ Sección generada para la creación del menú global ------------------*/
+	
+	/*Método generado para gestionar el llamado de cada menú mediante la implementación 
+	 *del Scanner y switch/case*/
+	private static void MenuPrincipal(String[] usuarioID, String[] usuarioContraseña, String[] registroID,
+			String[] registroFecha, int[] registroHoras, String[] registroActividad, Scanner scanner) {
+		
+		String Respuesta = "";
+		
+		while(!Respuesta.equals("3")) {
+			
+			Print("1) Menu de Usuarios\r\n"
+					+ "2) Menu de Analisis\r\n"
+					+ "3) Salir\n");
+			
+			Respuesta = scanner.nextLine();
+		
+			switch(Respuesta){
+				
+				case "1":
+					Print("Opción 1\n");
+					break;
+					
+				case "2":
+					MenuAnalisis(usuarioID, usuarioContraseña, registroID, registroFecha, registroHoras, registroActividad, scanner);
+					break;
+					
+				default:
+					if(!Respuesta.equals("3")) {
+						Print("Opción incorrecta, intente nuevamente\n");
+					}
+					break;
+				
+			}
+
+		}
+		
+		Print("Saliento del programa .....");
+
 	}
+
+	/*--------------------------------------------------------------------------------------------------------*/
+	
+	
+	
+	
+	
+	/*------------------ Sección generada para la creación del menú de análisis ------------------*/
+	
+	/*Método generado para gestionar las distintas tareas pertenecientes al menú de análisis medienta
+	 *preguntas de los scanner, ciclos y switch-case*/
+	private static void MenuAnalisis(String[] usuarioID, String[] usuarioContraseña, String[] registroID,
+			String[] registroFecha, int[] registroHoras, String[] registroActividad, Scanner scanner) {
+		
+		String Respuesta = "";
+		
+		while(!Respuesta.equals("5")) {
+			
+			Print("Bienvenido al menu de analisis!\r\n"
+				+ "\r\n"
+				+ "Que deseas realizar?\r\n"
+				+ "\r\n"
+				+ "1) Actividad más realizada\r\n"
+				+ "2) Actividad más realizada por cada usuario\r\n"
+				+ "3) Usuario con mayor procastinacion\r\n"
+				+ "4) Ver todas las actividades\r\n"
+				+ "5) Salir\n");
+			
+			Respuesta = scanner.nextLine();
+			
+			switch(Respuesta) {
+			
+			case "1":
+				Print("Opción 1\n");
+				break;
+				
+			case "2":
+				Print("Opción 2\n");
+				break;
+				
+			case "3":
+				Print("Opción 3\n");
+				break;
+				
+			case "4":
+				Print("Opción 4\n");
+				break;
+				
+			default:
+				if(!Respuesta.equals("5")) {
+					Print("Opción incorrecta, intente nuevamente\n");
+				}
+				break;
+			
+			}
+			
+		}
+		
+		Print("Saliento del menú de Análisis .....\n");
+		
+	}
+	
+	/*--------------------------------------------------------------------------------------------------------*/
+	
+	
+	
 	
 	
 	/* ------------------ Sección generada para lectura y almacenamiento de los datos de los txt ------------------*/
@@ -112,7 +220,10 @@ public class Main {
 	
 	/*----------------------------------------------------------------------------------------------------------------------*/
 	
-	
+	//Método generado para imprimir bonito :D
+	public static void Print(String texto) {
+		System.out.println(texto);
+	}
 	
 	
 	
