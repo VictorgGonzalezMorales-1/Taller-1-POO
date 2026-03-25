@@ -1,5 +1,14 @@
 package Taller_1;
 
+/*Integrantes del Taller:
+ * 
+ * Victor González Morales,  Rut: 220615529
+ * Joaquín Torres Flores,  Rut: 215473708
+ * 
+ * */
+
+
+
 //Importar librerias para axtivar las funciones
 import java.util.Scanner;
 import java.io.File;
@@ -99,7 +108,7 @@ public class Main {
 		
 		while(!Respuesta.equals("5")) {
 			
-			Print("Bienvenido al menu de analisis!\r\n"
+			Print("\nBienvenido al menu de analisis!\r\n"
 				+ "\r\n"
 				+ "Que deseas realizar?\r\n"
 				+ "\r\n"
@@ -111,22 +120,25 @@ public class Main {
 			
 			Respuesta = scanner.nextLine();
 			
+			String[] ActividadesUnicas = new String[300];
+			ActividadesUnicas(ActividadesUnicas, registroActividad);
+			
 			switch(Respuesta) {
 			
 			case "1":
-				Print("Opción 1\n");
+				ActividadMásRealizada(registroActividad, ActividadesUnicas, registroHoras);
 				break;
 				
 			case "2":
-				Print("Opción 2\n");
+				ActividadMásRealizadaPorUsuario(usuarioID, registroID, registroHoras, registroActividad, ActividadesUnicas);
 				break;
 				
 			case "3":
-				Print("Opción 3\n");
+				MásProcastinador(registroID, registroHoras, registroActividad, usuarioID);
 				break;
 				
 			case "4":
-				Print("Opción 4\n");
+				VerActividadesUnicas(ActividadesUnicas);
 				break;
 				
 			default:
@@ -143,6 +155,196 @@ public class Main {
 		
 	}
 	
+	
+	//1
+	
+	/*Método el cual recorrerá Arreglos y almacenará el tiempo empleado por cada actividad para
+	 *luego llamár al método del mayor e imprimir la actividad buscada*/
+	private static void ActividadMásRealizada(String[] registroActividad, String[] actividadesUnicas,
+			int[] registroHoras) {
+		
+		int[] ActividadMásRealizada = new int[actividadesUnicas.length];
+		
+		for(int a = 0; a < registroActividad.length; a++) {
+			
+			if(registroActividad[a] != null) {
+				
+				for(int b = 0; b < actividadesUnicas.length; b++) {
+					
+					if(actividadesUnicas[b] != null && actividadesUnicas[b].equals(registroActividad[a])) {
+						
+						ActividadMásRealizada[b] += registroHoras[a];
+						break;
+						
+					}
+					
+				}
+				
+			}
+			
+		}
+		
+		int Posición = mayor(ActividadMásRealizada);
+		Print("La actividad más realizada es: " +actividadesUnicas[Posición] + " con " + ActividadMásRealizada[Posición] + " Horas");
+		
+	}
+
+	//2
+	
+	/*Método generado para mediante busqueda entre los arreglos de cada usuario, se encontrará
+	 *la actividad más repetida por cada usuario empleando algoritmo del mayor y renovación de arreglos*/
+	private static void ActividadMásRealizadaPorUsuario(String[] usuarioID, String[] registroID, int[] registroHoras,
+			String[] registroActividad, String[] actividadesUnicas) {
+		
+		for(int a = 0; a < usuarioID.length; a++) {
+			
+			if(usuarioID[a] != null){
+
+			int[] TiempoEnActividadFavorita = new int[registroActividad.length];
+			
+				for(int b = 0; b < registroActividad.length; b++) {
+					
+					if(registroActividad[b] != null && registroID[b] != null && registroID[b].equals(usuarioID[a])) {
+
+						for(int c = 0; c < actividadesUnicas.length; c++) {
+							
+							if(actividadesUnicas[c] != null && actividadesUnicas[c].equals(registroActividad[b])) {
+								
+								TiempoEnActividadFavorita[c] += registroHoras[b];
+								break;
+								
+							}
+							
+						}
+						
+					}
+					
+					
+				}
+				
+				int Posición = mayor(TiempoEnActividadFavorita);
+				Print("El usuario " + usuarioID[a] + " ha realizado la actividad " + actividadesUnicas[Posición] + "un total de " + TiempoEnActividadFavorita[Posición] + " horas");
+			
+			}
+			
+		}
+		
+	}
+
+	//3
+	
+	/*Método el cual por cada usuario disponible, calculará el tiempo ocupado en actividades
+	 *diferentes al estudio y las acumulará para luego llamar otra función y que calcule el mayor
+	 *y mediante las listas anidades imprimirá al usuario más procastinador*/
+	private static void MásProcastinador(String[] registroID, int[] registroHoras, String[] registroActividad, String[] usuarioID) {
+		
+		int[] TiempoDeOcio = new int[registroID.length];
+		
+		for(int a = 0; a < usuarioID.length; a++) {
+			
+			if(usuarioID[a] != null) {
+				
+				for(int b = 0; b < registroActividad.length; b++) {
+					
+					if(registroActividad[b] != null){
+					
+						if(!registroActividad[b].equals("estudiar") && registroID[b].equals(usuarioID[a])) {
+							
+							TiempoDeOcio[a] += registroHoras[b];
+							
+						}
+					
+					}
+					
+				}
+				
+			}
+			
+		}
+		
+		int Posición = mayor(TiempoDeOcio);
+		
+		Print("El usuario con mayor tiempo de ocio es: " + usuarioID[Posición] + ""
+				+ " con " + TiempoDeOcio[Posición] + " Horas de tiempo de ocio");
+		
+	}
+
+	//4
+
+	/*Método el cual leerá e imprimirá la lista que se le ingrese*/
+	private static void VerActividadesUnicas(String[] actividadesUnicas) {
+		
+		for(int a = 0; a < actividadesUnicas.length; a++) {
+			
+			if(actividadesUnicas[a] != null) {
+				
+				Print((a + 1) + ") " + actividadesUnicas[a]);
+				
+			}
+			
+		}
+		
+	}
+	
+	/*Método generado para buscar todas las actividades sin que se repitan ninguna vez y almacenar estas
+	 *en un arreglo para su posterior uso*/
+	private static void ActividadesUnicas(String[] actividadesUnicas, String[] registroActividad) {
+		
+		int Contador = 0;
+		
+		for(int a = 0; a < registroActividad.length; a++) {
+			
+			String Actividad = registroActividad[a];
+			
+			Boolean Encontrado = false;
+			
+			if(Actividad != null) {
+				
+				for(int b = 0; b < a; b++) {
+					
+					if(Actividad.equals(registroActividad[b])) {
+						
+						Encontrado = true;
+						break;
+						
+					}
+					
+				}
+				
+				if(Encontrado == false) {
+					actividadesUnicas[Contador] = Actividad;
+					Contador++;
+				}
+				
+			}
+			
+		}
+		
+	}
+	
+	
+	//Más de 1 método usa este método
+	
+	/*Método el cual aplicará el algoritmo del mayor y retornará la posición de este*/
+	private static int mayor(int[] tiempoDeOcio) {
+		
+		int mayor = 0;
+		int posición = 0;
+		
+		for(int a = 0; a < tiempoDeOcio.length; a++) {
+			
+			if(tiempoDeOcio[a] >= mayor) {
+				
+				mayor = tiempoDeOcio[a];
+				posición = a;
+				
+			}
+			
+		}
+		
+		return posición;
+	}
+
 	/*--------------------------------------------------------------------------------------------------------*/
 	
 	
@@ -224,9 +426,6 @@ public class Main {
 	public static void Print(String texto) {
 		System.out.println(texto);
 	}
-	
-	
-	
 	
 }
 
