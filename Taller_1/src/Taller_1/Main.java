@@ -7,8 +7,6 @@ package Taller_1;
  * 
  * */
 
-
-
 //Importar librerias para axtivar las funciones
 import java.util.Scanner;
 import java.io.File;
@@ -70,7 +68,7 @@ public class Main {
 			switch(Respuesta){
 				
 				case "1":
-					Print("Opción 1\n");
+					identificadorUsuario(registroID, registroFecha, registroHoras, registroActividad, usuarioID, usuarioContraseña, scanner);
 					break;
 					
 				case "2":
@@ -93,6 +91,109 @@ public class Main {
 
 	/*--------------------------------------------------------------------------------------------------------*/
 	
+	
+	
+	/*--------------------------------- Sección de Menú Usuarios----------------------------------------------*/
+
+	/*Método el cual servirá para identificar usuario y entregar todos los valores en base a el*/
+	private static void identificadorUsuario(String[] registroID, String[] registroFecha, int[] registroHoras, 
+			String[] registroActividad, String[] usuarioID, String[] usuarioContraseña, Scanner scanner) {
+		
+		Boolean Encontrado = false;
+		
+		while(Encontrado == false) {
+			
+			Print("Usuario: ");
+			String Usuario = scanner.nextLine();
+			Print("Contraseña: ");
+			String Contraseña = scanner.nextLine();
+		
+			for(int a = 0; a < usuarioID.length; a++) {
+				
+				if(usuarioID[a] != null && usuarioID[a].equals(Usuario) && usuarioContraseña[a].equals(Contraseña)) {
+					
+					Print("\nAcceso correcto!\n");
+					MenuUsuarios(Usuario, registroID, registroFecha, registroHoras, registroActividad, usuarioID, usuarioContraseña, scanner);
+					Encontrado = true;
+					break;
+					
+				}
+				
+			}
+			
+			if(Encontrado == false) {
+				
+				Print("\nUsuaruo/ Contraseña no encontrad@, ingrese otr@ nuevamente\n");
+				
+			}
+			
+		}
+		
+		Print("\nSaliento del menú de Usuarios .....\n");
+		
+	}
+	
+	
+	
+	/*Método el cual imprimirá las opciones del menú de usuarios para luego comunicarse con los diferentes 
+	 *métodos de cada opción que se solcite*/
+	private static void MenuUsuarios(String usuario, String[] registroID, String[] registroFecha, int[] registroHoras,
+			String[] registroActividad, String[] usuarioID, String[] usuarioContraseña, Scanner scanner) {
+		
+		Print("Bienvenido " + usuario + "!\n");
+		Print("Que deseas realizar?\r\n"
+				+ "\r\n"
+				+ "1) Registrar actividad.\r\n"
+				+ "2) Modificar actividad.\r\n"
+				+ "3) Eliminar actividad.\r\n"
+				+ "4) Cambiar contraseña.\r\n"
+				+ "5) Salir.\n");
+		
+		String Respuesta = scanner.nextLine();
+		
+		while(!Respuesta.equals("5")) {
+			
+			switch(Respuesta) {
+			
+			case "1":
+				Print("Opción 1");
+				break;
+			
+			case "2":
+				Print("Opción 2");
+				break;
+				
+			case "3":
+				Print("Opción 3");
+				break;
+				
+			case "4":
+				Print("Opción 4");
+				break;
+				
+			default:
+				
+				if(!Respuesta.equals("5")) {
+					
+					Print("\nOpción incorrecta, intente nuevamente\n");
+					
+				}
+				
+				break;
+				
+			}
+			
+			Print("Ingrese otra opción: ");
+			Respuesta = scanner.nextLine();
+			
+		}
+		
+	}
+	
+	
+	
+	
+	/*--------------------------------------------------------------------------------------------------------*/
 	
 	
 	
@@ -151,7 +252,7 @@ public class Main {
 			
 		}
 		
-		Print("Saliento del menú de Análisis .....\n");
+		Print("\nSaliento del menú de Análisis .....\n");
 		
 	}
 	
