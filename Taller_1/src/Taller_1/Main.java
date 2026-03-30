@@ -14,7 +14,7 @@ import java.io.File;
 public class Main {
 
 	public static void main(String[] args) {
-		
+		System.out.println("dasd");
 		/*Generar Scanner Global, este lo emplearé durante todo el código
 		 *para ahorrar espacio usandolo como una variable en los métodos*/
 		Scanner scanner = new Scanner(System.in);
