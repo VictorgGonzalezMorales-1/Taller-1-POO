@@ -112,7 +112,7 @@ public class Main {
 		
 			for(int a = 0; a < usuarioID.length; a++) {
 				
-				if(usuarioID[a] != null && usuarioID[a].equals(Usuario) && usuarioContraseña[a].equals(Contraseña)) {
+				if(usuarioID[a] != null && usuarioID[a].equals(Usuario) && usuarioContraseña[a] != null && usuarioContraseña[a].equals(Contraseña)) {
 					
 					Print("\nAcceso correcto!\n");
 					MenuUsuarios(Usuario, registroID, registroFecha, registroHoras, registroActividad, usuarioID, usuarioContraseña, scanner);
@@ -125,7 +125,7 @@ public class Main {
 			
 			if(Encontrado == false) {
 				
-				Print("\nUsuaruo/ Contraseña no encontrad@, ingrese otr@ nuevamente\n");
+				Print("\nUsuario/ Contraseña no encontrad@, ingrese otr@ nuevamente\n");
 				
 			}
 			
@@ -212,11 +212,58 @@ public class Main {
 	            Print("Formato incorrecto, use: Fecha;Horas;Actividad\n");
 	            return;
 	            
+		    } else if(partes[0].split("/").length != 3) {
+	        	
+	        	Print("Formato incorrecto fecha , use: dia/mes/año\n");
+	        	return;
+		    }
+		    
+		    try {
+		    	
+		    	if(Integer.valueOf(partes[1]) < 0) {
+		    		
+		    		Print("Las horas deben ser un número positivo\n");
+		    		return;
+		    		
+		    	}
+		    	
+		    }catch(NumberFormatException e) {
+	        	
+	        	Print("Las horas deben ser un número\n");
+	        	return;
+	        	
 	        }
 		    
 		    String Fecha = partes[0];
 	        int Horas = Integer.valueOf(partes[1]);
 	        String Actividad = partes[2];
+	        
+	        try {
+	        	
+	        	String[] partesFecha = Fecha.split("/");
+	        	
+	        	int x = Integer.valueOf(partesFecha[0]);
+	        	int y = Integer.valueOf(partesFecha[1]);
+	        	int z = Integer.valueOf(partesFecha[2]);
+	        	
+	        	if(x < 0 || y < 0 || z < 0) {
+
+	        		Print("La fecha solo puede contener números positivos\n");
+	        		return;
+	        		
+	        	} else if(x > 31 || y > 12) {
+	        		
+	        		Print("Ingrese una fecha posible\n");
+	        		return;
+	        	}
+	        	
+	        }catch(NumberFormatException e) {
+	        	
+	        	Print("La fecha solo debe contener números\n");
+	        	return;
+	        	
+	        }
+
 	        
 	        int Libre = -1;
 	        for(int a = 0; a < registroID.length; a++) {
@@ -261,7 +308,7 @@ public class Main {
 			int[] registroHoras, String[] registroActividad, Scanner scanner) {
 		
 		Print("Cual actividad deseas modificar: \n");
-		
+
 		int Posición = 0;
 		
 		Print(Posición + ") Regresar." );
@@ -277,26 +324,60 @@ public class Main {
 			
 		}
 		
+		if(Posición == 0) {
+			
+			Print("No hay actividades que modificar\n");
+			return;
+			
+		}
+		
 		Print("\n¿Qué numero de actividad deseas modificar?: ");
 		
-		int ActividadAModificar = scanner.nextInt();
-		scanner.nextLine();
-		
-		Print("\n¿Qué deseas modificar?: \n");
-		Print("0) Regresar.\r\n"
+		try {
+
+			int ActividadAModificar = scanner.nextInt();
+			scanner.nextLine();
+			
+			if(ActividadAModificar < 0 || ActividadAModificar > Posición) {
+				
+				Print("El valor no está dentro del rango de valores\n");
+				return;
+				
+			} else if (ActividadAModificar == 0) {
+				
+				Print("Regresando\n");
+				return;
+				
+			}
+			
+			Print("\n¿Qué deseas modificar?: \n");
+			Print("0) Regresar.\r\n"
 				+ "1) Fecha\r\n"
 				+ "2) Duracion\r\n"
-				+ "3) Tipo de actividad");
+				+ "3) Tipo de actividad\n");
 		
-		String Modificar = scanner.nextLine();
-		
-		if(Modificar.equals("0")) {
-			Print("Regresando...\n");
+			String Modificar = scanner.nextLine();
+			
+			if (!Modificar.equals("0") && !Modificar.equals("1") && !Modificar.equals("2") && !Modificar.equals("3")) {
+				Print("Opción no válida\n");
+				return;
+			}
+			
+			if(Modificar.equals("0")) {
+				Print("Regresando...\n");
+				return;
+			}
+			else {
+				BuscarYModificar(ActividadAModificar, Modificar, usuario, registroID, registroFecha, registroHoras, registroActividad, scanner);
+			}
+			
+		}catch(Exception e) {
+			
+			Print("La actividad a modificar debe ser un número\n");
+			return;
+			
 		}
-		else {
-			BuscarYModificar(ActividadAModificar, Modificar, usuario, registroID, registroFecha, registroHoras, registroActividad, scanner);
-		}
-		
+
 	}
 	
 	
@@ -308,6 +389,8 @@ public class Main {
 		String[] NuevoTexto = new String[registroActividad.length];
 		
 		Print("Ingrese el valor por el cual cambiara su elección: \n");
+		
+		try {
 		String Cambiar = scanner.nextLine();
 		
 		for(int a = 0; a < registroActividad.length; a++) {
@@ -321,11 +404,57 @@ public class Main {
 					switch(modificar) {
 					
 					case "1":
+						
+						try {
+				        	
+				        	String[] partesFecha = Cambiar.split("/");
+				        	
+				        	int x = Integer.valueOf(partesFecha[0]);
+				        	int y = Integer.valueOf(partesFecha[1]);
+				        	int z = Integer.valueOf(partesFecha[2]);
+				        	
+				        	if(x < 0 || y < 0 || z < 0) {
+
+				        		Print("La fecha solo puede contener números positivos\n");
+				        		return;
+				        		
+				        	} else if(x > 31 || y > 12 ) {
+				        		
+				        		Print("Ingrese una fecha posible\n");
+				        		return;
+				        	}
+				        	
+				        }catch(NumberFormatException e) {
+				        	
+				        	Print("La fecha solo debe contener números\n");
+				        	return;
+				        	
+				        }
+						
 						registroFecha[a] = Cambiar;
+						
 						break;
 						
 					case "2":
+						
+						try {
+					    	
+					    	if(Integer.valueOf(Cambiar) < 0) {
+					    		
+					    		Print("Las horas deben ser un número positivo\n");
+					    		return;
+					    		
+					    	}
+					    	
+					    }catch(NumberFormatException e) {
+				        	
+				        	Print("Las horas deben ser un número\n");
+				        	return;
+				        	
+				        }
+						
 						registroHoras[a] = Integer.valueOf(Cambiar);
+						
 						break;
 						
 					case "3":
@@ -357,6 +486,13 @@ public class Main {
 		ReescribirTexto(NuevoTexto, "Registros.txt");
 		Print("Actividad modificada \n");
 		
+		} catch(Exception e) {
+			
+			Print("El valor a cambiar debe ser distinto de vacio o ser numérico\n");
+			return;
+			
+		}
+		
 	}
 	
 	
@@ -375,8 +511,8 @@ public class Main {
 			
 			if(registroActividad[a] != null && registroID[a].equals(usuario)) {
 				
-				Posición++;
 				LugarAModificar[Posición] = a;
+				Posición++;
 				Print(Posición + ") " + registroID[a] + ";" + registroFecha[a] + ";" + registroHoras[a] + ";" + registroActividad[a]);
 				
 			}
@@ -386,6 +522,7 @@ public class Main {
 		if(Posición == 0) {
 			
 			Print("No hay actividades que eliminar\n");
+			return;
 			
 		}
 		
@@ -393,10 +530,19 @@ public class Main {
 			
 			Print("¿Qué actividad deseas eliminar?: \n");
 			
+			try {
+			
 			int ActividadAEliminar = scanner.nextInt();
 			scanner.nextLine();
 			
-			int Indice = LugarAModificar[ActividadAEliminar];
+			if(ActividadAEliminar < 1 || ActividadAEliminar > Posición) {
+				
+				Print("Posición fuera del rango\n");
+				return;
+				
+			}
+			
+			int Indice = LugarAModificar[ActividadAEliminar - 1];
 			
 			registroID[Indice] = null;
 			registroFecha[Indice] = null;
@@ -420,6 +566,13 @@ public class Main {
 			
 			ReescribirTexto(NuevoTexto, "Registros.txt");
 			Print("Actividad eliminada\n ");
+			
+			} catch(Exception e) {
+				
+				Print("La posición debe ser un número\n");
+				scanner.nextLine();
+				return;
+			}
 			
 		}
 	}
@@ -505,6 +658,8 @@ public class Main {
 
 
 	/*--------------------------------------------------------------------------------------------------------*/
+	
+	
 	
 	
 	
