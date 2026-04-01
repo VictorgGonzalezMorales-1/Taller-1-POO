@@ -1,17 +1,17 @@
 package Taller_1;
 
-/*Integrantes del Taller:
- * 
- * Victor González Morales,  Rut: 220615529
- * Joaquín Torres Flores,  Rut: 215473708
- * 
- * */
-
 //Importar librerias para axtivar las funciones
 import java.util.Scanner;
-import java.io.File;
+import java.io.*;
 
 public class Main {
+	/*Integrantes del Taller:
+	 * 
+	 * Victor González Morales,  Rut: 220615529
+	 * Joaquín Torres Flores,  Rut: 215473708
+	 * 
+	 * */
+	
 
 	public static void main(String[] args) {
 		
@@ -110,7 +110,7 @@ public class Main {
 		
 			for(int a = 0; a < usuarioID.length; a++) {
 				
-				if(usuarioID[a] != null && usuarioID[a].equals(Usuario) && usuarioContraseña[a].equals(Contraseña)) {
+				if(usuarioID[a] != null && usuarioID[a].equals(Usuario) && usuarioContraseña[a] != null && usuarioContraseña[a].equals(Contraseña)) {
 					
 					Print("\nAcceso correcto!\n");
 					MenuUsuarios(Usuario, registroID, registroFecha, registroHoras, registroActividad, usuarioID, usuarioContraseña, scanner);
@@ -123,7 +123,7 @@ public class Main {
 			
 			if(Encontrado == false) {
 				
-				Print("\nUsuaruo/ Contraseña no encontrad@, ingrese otr@ nuevamente\n");
+				Print("\nUsuario/ Contraseña no encontrad@, ingrese otr@ nuevamente\n");
 				
 			}
 			
@@ -140,35 +140,37 @@ public class Main {
 	private static void MenuUsuarios(String usuario, String[] registroID, String[] registroFecha, int[] registroHoras,
 			String[] registroActividad, String[] usuarioID, String[] usuarioContraseña, Scanner scanner) {
 		
-		Print("Bienvenido " + usuario + "!\n");
-		Print("Que deseas realizar?\r\n"
-				+ "\r\n"
-				+ "1) Registrar actividad.\r\n"
-				+ "2) Modificar actividad.\r\n"
-				+ "3) Eliminar actividad.\r\n"
-				+ "4) Cambiar contraseña.\r\n"
-				+ "5) Salir.\n");
-		
-		String Respuesta = scanner.nextLine();
+		String Respuesta = "";
 		
 		while(!Respuesta.equals("5")) {
+			
+			Print("Bienvenido " + usuario + "!\n");
+			Print("Que deseas realizar?\r\n"
+					+ "\r\n"
+					+ "1) Registrar actividad.\r\n"
+					+ "2) Modificar actividad.\r\n"
+					+ "3) Eliminar actividad.\r\n"
+					+ "4) Cambiar contraseña.\r\n"
+					+ "5) Salir.\n");
+			
+			Respuesta = scanner.nextLine();
 			
 			switch(Respuesta) {
 			
 			case "1":
-				Print("Opción 1");
+				RegistrarActividad("Registros.txt", scanner, usuario, registroID, registroFecha, registroHoras, registroActividad);
 				break;
 			
 			case "2":
-				Print("Opción 2");
+				ModificarActividad(usuario, registroID, registroFecha, registroHoras, registroActividad, scanner);
 				break;
 				
 			case "3":
-				Print("Opción 3");
+				EliminarActividad(usuario, registroID, registroFecha, registroHoras, registroActividad, scanner);
 				break;
 				
 			case "4":
-				Print("Opción 4");
+				CambiarContraseña(usuario, usuarioID, usuarioContraseña, scanner);
 				break;
 				
 			default:
@@ -184,15 +186,475 @@ public class Main {
 			}
 			
 			Print("Ingrese otra opción: ");
-			Respuesta = scanner.nextLine();
+			
+		}
+		
+	}
+
+
+	//1
+	
+	/*Método generado para registrar actividad preguntado cual desea agregar
+	 *para luego colocarla en el txt */
+	private static void RegistrarActividad(String string, Scanner scanner, String usuario, String[] registroID, String[] registroFecha, int[] registroHoras, String[] registroActividad) {
+		
+		try {
+			
+			Print("\nIngrese la nueva actividad (formato: Fecha;Horas;Actividad)\n");
+			
+			String datos = scanner.nextLine();
+		    String[] partes = datos.split(";");
+		    
+		    if(partes.length < 3) {
+		    	
+	            Print("Formato incorrecto, use: Fecha;Horas;Actividad\n");
+	            return;
+	            
+		    } else if(partes[0].split("/").length != 3) {
+	        	
+	        	Print("Formato incorrecto fecha , use: dia/mes/año\n");
+	        	return;
+		    }
+		    
+		    try {
+		    	
+		    	if(Integer.valueOf(partes[1]) < 0) {
+		    		
+		    		Print("Las horas deben ser un número positivo\n");
+		    		return;
+		    		
+		    	}
+		    	
+		    }catch(NumberFormatException e) {
+	        	
+	        	Print("Las horas deben ser un número\n");
+	        	return;
+	        	
+	        }
+		    
+		    String Fecha = partes[0];
+	        int Horas = Integer.valueOf(partes[1]);
+	        String Actividad = partes[2];
+	        
+	        try {
+	        	
+	        	String[] partesFecha = Fecha.split("/");
+	        	
+	        	int x = Integer.valueOf(partesFecha[0]);
+	        	int y = Integer.valueOf(partesFecha[1]);
+	        	int z = Integer.valueOf(partesFecha[2]);
+	        	
+	        	if(x < 0 || y < 0 || z < 0) {
+
+	        		Print("La fecha solo puede contener números positivos\n");
+	        		return;
+	        		
+	        	} else if(x > 31 || y > 12) {
+	        		
+	        		Print("Ingrese una fecha posible\n");
+	        		return;
+	        	}
+	        	
+	        }catch(NumberFormatException e) {
+	        	
+	        	Print("La fecha solo debe contener números\n");
+	        	return;
+	        	
+	        }
+
+	        
+	        int Libre = -1;
+	        for(int a = 0; a < registroID.length; a++) {
+	            if(registroID[a] == null) {
+	                Libre = a;
+	                break;
+	            }
+	        }
+	        
+	        if(Libre == -1) {
+	            Print("No queda espacio \n");
+	            return;
+	        }
+	        
+	        registroID[Libre] = usuario;
+	        registroFecha[Libre] = Fecha;
+	        registroHoras[Libre] = Horas;
+	        registroActividad[Libre] = Actividad;
+			
+			BufferedWriter Escritor = new BufferedWriter(new FileWriter(string, true));
+			Escritor.write(usuario + ";" + Fecha + ";" + Horas + ";" + Actividad);
+			Escritor.newLine();
+			Escritor.close();
+			
+			Print("\nActividad agregada :D\n");
+			
+		}
+		
+		catch(Exception e) {
+			
+			Print("\nError al agregar la actividad\n");
 			
 		}
 		
 	}
 	
 	
+	//2
+	
+	//Método generado para modificar alguna actividad generada por el usuario, 
+	private static void ModificarActividad(String usuario, String[] registroID, String[] registroFecha,
+			int[] registroHoras, String[] registroActividad, Scanner scanner) {
+		
+		Print("Cual actividad deseas modificar: \n");
+
+		int Posición = 0;
+		
+		Print(Posición + ") Regresar." );
+		
+		for(int a = 0; a < registroActividad.length; a++) {
+			
+			if(registroActividad[a] != null && registroID[a].equals(usuario)) {
+				
+				Posición++;
+				Print(Posición + ") " + registroID[a] + ";" + registroFecha[a] + ";" + registroHoras[a] + ";" + registroActividad[a]);
+				
+			}
+			
+		}
+		
+		if(Posición == 0) {
+			
+			Print("No hay actividades que modificar\n");
+			return;
+			
+		}
+		
+		Print("\n¿Qué numero de actividad deseas modificar?: ");
+		
+		try {
+
+			int ActividadAModificar = scanner.nextInt();
+			scanner.nextLine();
+			
+			if(ActividadAModificar < 0 || ActividadAModificar > Posición) {
+				
+				Print("El valor no está dentro del rango de valores\n");
+				return;
+				
+			} else if (ActividadAModificar == 0) {
+				
+				Print("Regresando\n");
+				return;
+				
+			}
+			
+			Print("\n¿Qué deseas modificar?: \n");
+			Print("0) Regresar.\r\n"
+				+ "1) Fecha\r\n"
+				+ "2) Duracion\r\n"
+				+ "3) Tipo de actividad\n");
+		
+			String Modificar = scanner.nextLine();
+			
+			if (!Modificar.equals("0") && !Modificar.equals("1") && !Modificar.equals("2") && !Modificar.equals("3")) {
+				Print("Opción no válida\n");
+				return;
+			}
+			
+			if(Modificar.equals("0")) {
+				Print("Regresando...\n");
+				return;
+			}
+			else {
+				BuscarYModificar(ActividadAModificar, Modificar, usuario, registroID, registroFecha, registroHoras, registroActividad, scanner);
+			}
+			
+		}catch(Exception e) {
+			
+			Print("La actividad a modificar debe ser un número\n");
+			return;
+			
+		}
+
+	}
 	
 	
+	/*Método generado para gestionar la actividad cambiada*/
+	private static void BuscarYModificar(int actividadAModificar, String modificar, String usuario,
+			String[] registroID, String[] registroFecha, int[] registroHoras, String[] registroActividad, Scanner scanner) {
+		
+		int Posición = 0;
+		String[] NuevoTexto = new String[registroActividad.length];
+		
+		Print("Ingrese el valor por el cual cambiara su elección: \n");
+		
+		try {
+		String Cambiar = scanner.nextLine();
+		
+		for(int a = 0; a < registroActividad.length; a++) {
+			
+			if(registroActividad[a] != null && registroID[a].equals(usuario)) {
+				
+				Posición++;
+				
+				if(actividadAModificar == Posición) {
+				
+					switch(modificar) {
+					
+					case "1":
+						
+						try {
+				        	
+				        	String[] partesFecha = Cambiar.split("/");
+				        	
+				        	int x = Integer.valueOf(partesFecha[0]);
+				        	int y = Integer.valueOf(partesFecha[1]);
+				        	int z = Integer.valueOf(partesFecha[2]);
+				        	
+				        	if(x < 0 || y < 0 || z < 0) {
+
+				        		Print("La fecha solo puede contener números positivos\n");
+				        		return;
+				        		
+				        	} else if(x > 31 || y > 12 ) {
+				        		
+				        		Print("Ingrese una fecha posible\n");
+				        		return;
+				        	}
+				        	
+				        }catch(NumberFormatException e) {
+				        	
+				        	Print("La fecha solo debe contener números\n");
+				        	return;
+				        	
+				        }
+						
+						registroFecha[a] = Cambiar;
+						
+						break;
+						
+					case "2":
+						
+						try {
+					    	
+					    	if(Integer.valueOf(Cambiar) < 0) {
+					    		
+					    		Print("Las horas deben ser un número positivo\n");
+					    		return;
+					    		
+					    	}
+					    	
+					    }catch(NumberFormatException e) {
+				        	
+				        	Print("Las horas deben ser un número\n");
+				        	return;
+				        	
+				        }
+						
+						registroHoras[a] = Integer.valueOf(Cambiar);
+						
+						break;
+						
+					case "3":
+						registroActividad[a] = Cambiar;
+						break;
+						
+					}
+					
+					break;
+				
+				}
+				
+			}	
+			
+		}
+		
+		int Indice = 0;
+
+		for(int a = 0; a < registroID.length;a++) {
+			
+			if(registroID[a] != null) {
+				
+				NuevoTexto[Indice] = registroID[a] + ";" + registroFecha[a] + ";" + registroHoras[a] + ";" + registroActividad[a];
+				Indice++;
+			}
+			
+		}
+		
+		ReescribirTexto(NuevoTexto, "Registros.txt");
+		Print("Actividad modificada \n");
+		
+		} catch(Exception e) {
+			
+			Print("El valor a cambiar debe ser distinto de vacio o ser numérico\n");
+			return;
+			
+		}
+		
+	}
+	
+	
+	//3
+	
+	/*Método generado para preguntar y borrar la actividad seleccionada*/
+	private static void EliminarActividad(String usuario, String[] registroID, String[] registroFecha,
+			int[] registroHoras, String[] registroActividad, Scanner scanner) {
+		
+		Print("Actividades: \n");
+		
+		int Posición = 0;
+		int[] LugarAModificar = new int[registroActividad.length];
+		
+		for(int a = 0; a < registroActividad.length; a++) {
+			
+			if(registroActividad[a] != null && registroID[a].equals(usuario)) {
+				
+				LugarAModificar[Posición] = a;
+				Posición++;
+				Print(Posición + ") " + registroID[a] + ";" + registroFecha[a] + ";" + registroHoras[a] + ";" + registroActividad[a]);
+				
+			}
+			
+		}
+		
+		if(Posición == 0) {
+			
+			Print("No hay actividades que eliminar\n");
+			return;
+			
+		}
+		
+		else {
+			
+			Print("¿Qué actividad deseas eliminar?: \n");
+			
+			try {
+			
+			int ActividadAEliminar = scanner.nextInt();
+			scanner.nextLine();
+			
+			if(ActividadAEliminar < 1 || ActividadAEliminar > Posición) {
+				
+				Print("Posición fuera del rango\n");
+				return;
+				
+			}
+			
+			int Indice = LugarAModificar[ActividadAEliminar - 1];
+			
+			registroID[Indice] = null;
+			registroFecha[Indice] = null;
+			registroHoras[Indice] = 0;
+			registroActividad[Indice] = null;
+			
+			String[] NuevoTexto = new String[registroID.length];
+			
+			int Cambio = 0;
+			
+			for(int a = 0; a < registroID.length; a++) {
+				
+				if(registroID[a] != null) {
+					
+					NuevoTexto[Cambio] =  registroID[a] + ";" + registroFecha[a] + ";" + registroHoras[a] + ";" + registroActividad[a];
+					Cambio++;
+					
+				}
+				
+			}
+			
+			ReescribirTexto(NuevoTexto, "Registros.txt");
+			Print("Actividad eliminada\n ");
+			
+			} catch(Exception e) {
+				
+				Print("La posición debe ser un número\n");
+				scanner.nextLine();
+				return;
+			}
+			
+		}
+	}
+
+
+	//4
+	
+	/*Método generado para pedir la contraseña que desea cambiar y reemplazarla en el txt*/
+	private static void CambiarContraseña(String usuario, String[] usuarioID, String[] usuarioContraseña,
+			Scanner scanner) {
+		
+		String[] NuevoTexto = new String[usuarioContraseña.length];
+		
+		Print("Ingrese su nueva contraseña: \n");
+		String Contraseña = scanner.nextLine();
+		
+		for(int a = 0; a < usuarioID.length; a++) {
+			
+			if(usuarioID[a] != null) {
+			
+				if(usuario.equals(usuarioID[a])) {
+				
+					usuarioContraseña[a] = Contraseña;
+					break;
+					
+				}
+				
+			}
+			
+		}
+		
+		for(int a = 0; a < usuarioID.length; a++) {
+			
+			if(usuarioID[a] != null) {
+				
+				NuevoTexto[a] = usuarioID[a] + ";" + usuarioContraseña[a];
+				
+			}
+			
+		}
+		
+		
+		ReescribirTexto(NuevoTexto, "Usuarios.txt");
+		Print("Contraseña cambiada :D\n");
+		
+		
+	}
+
+	
+	//Más de 1 método usa este método
+	
+	/*Método generado para reescribir el archivo con su respectivo cambio*/
+	private static void ReescribirTexto(String[] nuevoTexto, String archivo) {
+
+		try {
+			
+			BufferedWriter Escritor = new BufferedWriter(new FileWriter(archivo, false));
+			
+			for (int a = 0; a < nuevoTexto.length; a++) {
+				
+				if(nuevoTexto[a] != null) {
+					
+					Escritor.write(nuevoTexto[a]);
+					Escritor.newLine();
+					
+				}
+				
+			}
+			
+			Print("Texto modificado :D\n");
+			Escritor.close();
+			
+		}
+		
+		catch(Exception e) {
+			
+			Print("Error al modificar la contraseña\n");
+			
+		}
+		
+	}
+
+
+
 	/*--------------------------------------------------------------------------------------------------------*/
 	
 	
@@ -239,7 +701,7 @@ public class Main {
 				break;
 				
 			case "4":
-				VerActividadesUnicas(ActividadesUnicas);
+				VerActividadesUnicas(registroID, registroFecha, registroHoras, registroActividad);
 				break;
 				
 			default:
@@ -324,7 +786,7 @@ public class Main {
 				}
 				
 				int Posición = mayor(TiempoEnActividadFavorita);
-				Print("El usuario " + usuarioID[a] + " ha realizado la actividad " + actividadesUnicas[Posición] + "un total de " + TiempoEnActividadFavorita[Posición] + " horas");
+				Print("El usuario " + usuarioID[a] + " ha realizado la actividad " + actividadesUnicas[Posición] + " un total de " + TiempoEnActividadFavorita[Posición] + " horas");
 			
 			}
 			
@@ -373,13 +835,13 @@ public class Main {
 	//4
 
 	/*Método el cual leerá e imprimirá la lista que se le ingrese*/
-	private static void VerActividadesUnicas(String[] actividadesUnicas) {
+	private static void VerActividadesUnicas(String[] registroID, String[] registroFecha, int[] registroHoras, String[] registroActividad) {
 		
-		for(int a = 0; a < actividadesUnicas.length; a++) {
+		for(int a = 0; a < registroID.length; a++) {
 			
-			if(actividadesUnicas[a] != null) {
+			if(registroID[a] != null) {
 				
-				Print((a + 1) + ") " + actividadesUnicas[a]);
+				Print((a + 1) + ") " +  " Usuario: " + registroID[a] + "/ Fecha: " + registroFecha[a] + "/ Horas: " + registroHoras[a] + "/ Actividad: " + registroActividad[a]);
 				
 			}
 			
