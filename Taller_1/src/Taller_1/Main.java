@@ -7,8 +7,8 @@ import java.io.*;
 public class Main {
 	/*Integrantes del Taller:
 	 * 
-	 * Victor González Morales,  Rut: 220615529
-	 * Joaquín Torres Flores,  Rut: 215473708
+	 * Victor González Morales,  Rut: 220615529, Carrera: Ingeniería Civil Industrial 
+	 * Joaquín Torres Flores,  Rut: 215473708, Carrera: Ingeniería Civil Industrial 
 	 * 
 	 * */
 	
