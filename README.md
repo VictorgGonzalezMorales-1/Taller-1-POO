@@ -126,4 +126,3 @@ Fecha:
 ### 5.- Navegar mediante números ingresados por teclado  
 
 ### 6.- Seguir las instrucciones mostradas en pantalla  
-```
